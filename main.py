@@ -14,12 +14,45 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+# libraries
 import webapp2
+import random
 
-class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.write('Hello world!')
+def getRandomFortune():
+    fortunes = [
+        "I see much code in your future",
+        "Consider eating more fortune cookies",
+        "You have tamed the mighty python, now you must free it onto the Great Spider's Web",
+        "Do stuff"
+    ]
 
-app = webapp2.WSGIApplication([
-    ('/', MainHandler)
-], debug=True)
+    num_fortunes = len(fortunes)
+    fortune_index = random.randrange(0,num_fortunes)
+
+    return fortunes[fortune_index] #fortune[fortune_index]
+
+class MainHandler(webapp2.RequestHandler): # must inherit from RequestHandler class
+    def get(self): # if a GET request came to this handler, do this
+        header = "<h1>Fortune Cookie</h1>"
+
+        fortune = "<strong>" + getRandomFortune() + "</strong>"
+
+        fortune_sentence = "Your fortune: " + fortune
+        fortune_paragraph = "<p>" + fortune_sentence + "</p>"
+
+        lucky_number = "<strong>" + str(random.randint(1,100)) + "</strong>"
+        number_sentence = "Your lucky number: " + lucky_number
+        number_paragraph = "<p>" + number_sentence + "</p>"
+
+        refresh_button = "<a href='.'><button>Another cookie, please!</button></a>"
+
+        content = header + fortune_paragraph + number_paragraph + refresh_button
+
+        self.response.write(content)
+
+routes = [
+    ('/', MainHandler),
+]
+
+app = webapp2.WSGIApplication(routes, debug=True)
